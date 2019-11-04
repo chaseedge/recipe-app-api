@@ -15,6 +15,7 @@ def detail_url(recipe_id):
     """return recipe detail url"""
     return reverse('recipe:recipe-detail', args=[recipe_id])
 
+
 def sample_tag(user, name='Main course'):
     """create and return a sample tag"""
     return Tag.objects.create(user=user, name=name)
@@ -102,5 +103,3 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
-
-
