@@ -1,8 +1,18 @@
+import os
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,\
     PermissionsMixin
 from django.conf import settings
 
+
+def recipe_image_file_path(instance, filename):
+    """Generate file path for new recipe image"""
+    assert filename.count('.')>=1
+    ext = filename.split(".")[-1]
+    filename = f'{uuid.uuid4()}.{ext}'
+
+    return  os.path.join('uploads/recipe/', filename)
 
 class UserManager(BaseUserManager):
 
@@ -73,12 +83,12 @@ class Recipe(models.Model):
     time_minutes = models.IntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     link = models.CharField(max_length=255, blank=True)
-
     # 'Ingredient' makes is so we don't have to have the models in any order
     # could have passed in just Ingredient but then we would have to make sure
     # Recipe is after Ingredient
     ingredients = models.ManyToManyField('Ingredient')
     tags = models.ManyToManyField('Tag')
+    image = models.ImageField(null=True, upload_to=recipe_image_file_path)
 
     def __str__(self):
         return self.title
